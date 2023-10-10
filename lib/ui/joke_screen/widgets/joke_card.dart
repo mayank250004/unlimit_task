@@ -53,48 +53,12 @@ class _JokeCardWidgetState extends State<JokeCardWidget> {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(widget.joke, style: const TextStyle(fontSize: 18.0)),
-
-            // Stack(
-            //   children: [
-            //
-            //     if (_isVisible)
-            //       const Positioned(
-            //         left: 0,
-            //         top: 0,
-            //         child: Icon(
-            //           Icons.emoji_emotions_outlined,
-            //           size: 32.0,
-            //           color: Colors.yellow,
-            //         ),
-            //       ),
-            //     if (_isVisible)
-            //       const Positioned(
-            //         right: 0,
-            //         bottom: 0,
-            //         child: Icon(
-            //           Icons.emoji_emotions_outlined,
-            //           size: 32.0,
-            //           color: Colors.yellow,
-            //         ),
-            //       ),
-            //   ],
-            // ),
           ),
         ),
         if (_isVisible)
           const Positioned(
             left: 0,
             top: 0,
-            child: Icon(
-              Icons.emoji_emotions_outlined,
-              size: 32.0,
-              color: Colors.yellow,
-            ),
-          ),
-        if (_isVisible)
-          const Positioned(
-            right: 0,
-            bottom: 0,
             child: Icon(
               Icons.emoji_emotions_rounded,
               size: 32.0,

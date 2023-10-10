@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:unlimit_task/model/joke.dart';
 import 'package:unlimit_task/service/api_service.dart';
@@ -10,17 +12,31 @@ class JokeController extends GetxController {
   final jokeList = <Joke>[].obs;
   final isLoading = false.obs;
 
+  late ValueNotifier<int> timerValue; // ValueNotifier for countdown timer
+  late Timer _timer;
+
   @override
   void onInit() {
     super.onInit();
 
+    // Initialize timerValue with an initial value
+    timerValue = ValueNotifier<int>(0);
+
     // Load saved jokes on app start
-    _fetchJokeFromAPI();
+    _fetchJokeFromAPI(initial: true);
 
     // Fetch a new joke every minute
-    Timer.periodic(const Duration(minutes: 1), (_) {
-      _fetchJokeFromAPI();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      _updateTimerValue(); // Update countdown timer value every second
     });
+  }
+
+  void _updateTimerValue() {
+    final currentTime = DateTime.now();
+    final nextMinute = DateTime(currentTime.year, currentTime.month,
+        currentTime.day, currentTime.hour, currentTime.minute + 1);
+    final secondsRemaining = nextMinute.difference(currentTime).inSeconds;
+    timerValue.value = secondsRemaining;
   }
 
   _fetchJokeFromAPI({bool initial = false}) async {
@@ -49,5 +65,11 @@ class JokeController extends GetxController {
     if (initial) {
       isLoading.value = false;
     }
+  }
+
+  @override
+  void onClose() {
+    _timer.cancel(); // Cancel the timer when the controller is closed
+    super.onClose();
   }
 }
