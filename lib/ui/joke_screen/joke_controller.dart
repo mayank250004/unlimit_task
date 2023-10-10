@@ -20,34 +20,22 @@ class JokeController extends GetxController {
     super.onInit();
 
     // Initialize timerValue with an initial value
-    timerValue = ValueNotifier<int>(0);
+    timerValue = ValueNotifier<int>(60);
 
     // Load saved jokes on app start
     _fetchJokeFromAPI(initial: true);
 
     // Set up a timer to update the timerValue every second
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      _updateTimerValue(); // Update countdown timer value every second
+      // Update countdown timer value every second
 
       // Calculate if 60 seconds have passed
       if (timerValue.value <= 0) {
         _fetchJokeFromAPI(); // Fetch a new joke after 60 seconds
+      } else {
+        timerValue.value--;
       }
-      else
-        {
-          timerValue.value--;
-        }
-
     });
-
-  }
-
-  void _updateTimerValue() {
-    final currentTime = DateTime.now();
-    final nextMinute = DateTime(currentTime.year, currentTime.month,
-        currentTime.day, currentTime.hour, currentTime.minute + 1);
-    final secondsRemaining = nextMinute.difference(currentTime).inSeconds;
-    timerValue.value = secondsRemaining;
   }
 
   _fetchJokeFromAPI({bool initial = false}) async {
@@ -57,6 +45,8 @@ class JokeController extends GetxController {
       if (storageJokes.isNotEmpty) {
         jokeList.addAll(storageJokes);
       }
+    } else {
+      timerValue.value = 60;
     }
     final jokeResponse = await _apiService.fetchJoke();
 
