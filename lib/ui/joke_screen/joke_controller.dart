@@ -64,6 +64,7 @@ class JokeController extends GetxController {
       // Add the new joke to the beginning of the list
       if (jokeList.contains(jokeResponse)) {
         // Return if Duplicate Entry Found
+        // Equatable is in model class so this will work automaticaly
         return;
       }
       jokeList.insert(0, jokeResponse);
