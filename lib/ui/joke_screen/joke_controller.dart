@@ -25,10 +25,21 @@ class JokeController extends GetxController {
     // Load saved jokes on app start
     _fetchJokeFromAPI(initial: true);
 
-    // Fetch a new joke every minute
+    // Set up a timer to update the timerValue every second
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       _updateTimerValue(); // Update countdown timer value every second
+
+      // Calculate if 60 seconds have passed
+      if (timerValue.value <= 0) {
+        _fetchJokeFromAPI(); // Fetch a new joke after 60 seconds
+      }
+      else
+        {
+          timerValue.value--;
+        }
+
     });
+
   }
 
   void _updateTimerValue() {
