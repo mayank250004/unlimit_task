@@ -44,6 +44,9 @@ class JokeController extends GetxController {
       final storageJokes = await retrieveJokeList();
       if (storageJokes.isNotEmpty) {
         jokeList.addAll(storageJokes);
+        //Don't hit api initially if jokes are already in list , timer will fetch them automatically
+        isLoading.value = false;
+        return;
       }
     } else {
       timerValue.value = 60;
@@ -51,13 +54,12 @@ class JokeController extends GetxController {
     final jokeResponse = await _apiService.fetchJoke();
 
     if (jokeResponse != null && jokeResponse.joke.trim().isNotEmpty) {
-      // Add the new joke to the beginning of the list
-      if (jokeList.contains(jokeResponse)) {
-        // Return if Duplicate Entry Found
-        // Equatable is in model class so this will work automaticaly
-        return;
+      // Check Duplicate Entry Found, Equatable is in model class so this will work automatically
+      if (!jokeList.contains(jokeResponse)) {
+        // Add the new joke to the beginning of the list
+        jokeList.insert(0, jokeResponse);
       }
-      jokeList.insert(0, jokeResponse);
+
       // Limit the list to 10 jokes
       if (jokeList.length > 10) {
         jokeList.removeLast();
