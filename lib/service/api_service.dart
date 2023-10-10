@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 import 'package:unlimit_task/model/joke.dart';
+import 'package:unlimit_task/utils/const.dart';
 import 'package:unlimit_task/utils/utils.dart';
 
 class RestAPIService extends GetxService {
@@ -9,14 +10,13 @@ class RestAPIService extends GetxService {
     final dio = Dio();
 
     try {
-      final response = await dio
-          .get("https://geek-jokes.sameerkumar.website/api?format=json");
+      final response = await dio.get("$apiBaseUrl/api?format=json");
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = response.data;
         return Joke.fromJson(data);
       } else {
-        throw Exception("Failed to load joke");
+        debugPrint("Response Error : ${response.statusCode}");
       }
     } on DioException catch (e) {
       // Handle DioError exceptions
@@ -31,8 +31,6 @@ class RestAPIService extends GetxService {
     } catch (e) {
       debugPrint("API Error: $e");
     }
-    finally{
-      return null;
-    }
+    return null;
   }
 }
